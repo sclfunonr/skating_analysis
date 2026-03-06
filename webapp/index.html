@@ -1,0 +1,1880 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Dream to Win — Dream It. Analyze It. Win It.</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;500;700&family=Neue+Haas+Grotesk:wght@400;500;700&family=DM+Mono:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Space+Grotesk:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  /* Liquid glass palette — deep slate base with aurora accents */
+  --bg-deep:     #050810;
+  --bg-mid:      #090e1a;
+  --bg-surface:  #0c1220;
+
+  /* Glass layers */
+  --glass-0: rgba(255,255,255,0.03);
+  --glass-1: rgba(255,255,255,0.06);
+  --glass-2: rgba(255,255,255,0.10);
+  --glass-3: rgba(255,255,255,0.16);
+  --glass-border: rgba(255,255,255,0.12);
+  --glass-border-bright: rgba(255,255,255,0.22);
+
+  /* Aurora accent colors */
+  --aurora-1: #5be4ff;  /* ice blue */
+  --aurora-2: #a78bfa;  /* violet */
+  --aurora-3: #34d399;  /* emerald */
+  --aurora-4: #f472b6;  /* rose */
+  --aurora-5: #fbbf24;  /* amber */
+
+  /* Text */
+  --text-0: rgba(255,255,255,0.95);
+  --text-1: rgba(255,255,255,0.75);
+  --text-2: rgba(255,255,255,0.50);
+  --text-3: rgba(255,255,255,0.30);
+
+  /* Status */
+  --ok:    #34d399;
+  --warn:  #fbbf24;
+  --err:   #f87171;
+
+  /* Typography */
+  --display: 'Playfair Display', serif;
+  --sans:    'Space Grotesk', sans-serif;
+  --mono:    'DM Mono', monospace;
+
+  --r-sm: 10px;
+  --r-md: 16px;
+  --r-lg: 22px;
+  --r-xl: 32px;
+}
+
+html, body { height: 100%; }
+body {
+  min-height: 100%;
+  background: var(--bg-deep);
+  color: var(--text-0);
+  font-family: var(--sans);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Dynamic aurora background ── */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background:
+    radial-gradient(ellipse 90% 50% at 20% 10%, rgba(91,228,255,0.08) 0%, transparent 60%),
+    radial-gradient(ellipse 70% 40% at 80% 80%, rgba(167,139,250,0.07) 0%, transparent 55%),
+    radial-gradient(ellipse 50% 30% at 60% 40%, rgba(52,211,153,0.04) 0%, transparent 50%),
+    radial-gradient(ellipse 60% 60% at 10% 80%, rgba(244,114,182,0.04) 0%, transparent 55%);
+  pointer-events: none; z-index: 0;
+  animation: auroraShift 12s ease-in-out infinite alternate;
+}
+
+@keyframes auroraShift {
+  0%   { opacity: 0.7; }
+  50%  { opacity: 1.0; }
+  100% { opacity: 0.8; }
+}
+
+#root { position: relative; z-index: 1; min-height: 100vh; }
+
+/* ── Layout ── */
+.app {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 28px 120px;
+}
+
+/* ── Apple Liquid Glass mixin ── */
+.glass {
+  background: var(--glass-1);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+}
+
+.glass-bright {
+  background: var(--glass-2);
+  border: 1px solid var(--glass-border-bright);
+  backdrop-filter: blur(32px) saturate(200%);
+  -webkit-backdrop-filter: blur(32px) saturate(200%);
+}
+
+/* ── Header ── */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 32px 0 36px;
+  margin-bottom: 8px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+/* Animated SVG logo icon — no box/border */
+.logo-svg-wrap {
+  width: 48px; height: 48px;
+  position: relative;
+  display: flex; align-items: center; justify-content: center;
+}
+
+.logo-text-group {
+  display: flex; flex-direction: column; gap: 2px;
+}
+
+.logo-name {
+  font-family: var(--display);
+  font-size: 22px;
+  font-weight: 700;
+  font-style: italic;
+  letter-spacing: -0.3px;
+  background: linear-gradient(135deg, #fff 0%, var(--aurora-1) 60%, var(--aurora-2) 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.logo-sub {
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--text-2);
+}
+
+/* ── Status pill ── */
+.status-pill {
+  display: flex; align-items: center; gap: 8px;
+  font-family: var(--mono); font-size: 11px;
+  color: var(--text-2);
+  background: var(--glass-0);
+  border: 1px solid var(--glass-border);
+  padding: 8px 16px;
+  border-radius: 100px;
+  cursor: pointer;
+  transition: all 0.2s;
+  backdrop-filter: blur(16px);
+}
+.status-pill:hover { border-color: var(--glass-border-bright); color: var(--text-1); }
+
+.status-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--text-3);
+  transition: all 0.3s;
+}
+.status-dot.ok    { background: var(--ok); box-shadow: 0 0 8px var(--ok); }
+.status-dot.error { background: var(--err); }
+
+/* ── Hero Video Zone ── */
+.hero-section {
+  position: relative;
+  margin-bottom: 32px;
+}
+
+/* Outer wrapper: rounded corners, clips inner content, allows overlay */
+.hero-video-frame {
+  width: 100%;
+  border-radius: var(--r-xl);
+  overflow: hidden;
+  background: rgba(0,0,0,0.6);
+  border: 1px solid var(--glass-border);
+  position: relative;
+  min-height: 420px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.hero-video-frame.has-file {
+  border-color: rgba(52,211,153,0.3);
+  box-shadow: 0 0 40px rgba(52,211,153,0.06);
+  cursor: default;
+}
+
+.hero-video-frame.drag-over {
+  border-color: var(--aurora-1);
+  box-shadow: 0 0 60px rgba(91,228,255,0.15);
+}
+
+.hero-video-frame video {
+  width: 100%;
+  display: block;
+  max-height: 520px;
+  object-fit: contain;
+}
+
+/* Glass carousel overlay — at bottom of video frame, inside overflow:hidden */
+.hero-overlay-carousel {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  z-index: 20;
+  background: rgba(5, 8, 16, 0.72);
+  backdrop-filter: blur(28px) saturate(180%);
+  -webkit-backdrop-filter: blur(28px) saturate(180%);
+  border-top: 1px solid rgba(255,255,255,0.14);
+  padding: 20px 24px 18px;
+  animation: fadeUp 0.5s ease both;
+}
+
+/* Custom floating video controls — rendered ABOVE the glass overlay via higher z-index */
+/* Lives inside hero-video-frame (overflow:hidden) so gets border-radius clipping */
+.hero-video-controls {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  z-index: 40;
+  display: flex; align-items: center; gap: 10px;
+  padding: 14px 20px 18px;
+  background: linear-gradient(to bottom, rgba(5,8,16,0.75) 0%, transparent 100%);
+  opacity: 0;
+  transition: opacity 0.25s;
+  pointer-events: none;
+}
+
+/* Always visible when carousel overlay is active */
+.hero-video-frame.has-overlay .hero-video-controls,
+.hero-video-frame:hover .hero-video-controls {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.vc-btn {
+  background: rgba(255,255,255,0.13);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 50%;
+  width: 34px; height: 34px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; color: white; flex-shrink: 0;
+  transition: background 0.15s, transform 0.1s;
+  padding: 0;
+}
+.vc-btn:hover { background: rgba(255,255,255,0.24); transform: scale(1.08); }
+.vc-btn svg { width: 15px; height: 15px; }
+
+.vc-progress {
+  flex: 1;
+  height: 3px;
+  background: rgba(255,255,255,0.2);
+  border-radius: 2px;
+  cursor: pointer;
+  position: relative;
+}
+.vc-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--aurora-2), var(--aurora-1));
+  border-radius: 2px;
+  pointer-events: none;
+}
+
+.vc-time {
+  font-family: var(--mono); font-size: 10px;
+  color: rgba(255,255,255,0.65); white-space: nowrap;
+}
+
+.vc-volume-wrap {
+  display: flex; align-items: center; gap: 7px;
+}
+
+.vc-volume-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 62px; height: 3px;
+  background: rgba(255,255,255,0.2);
+  border-radius: 2px; outline: none; cursor: pointer;
+}
+.vc-volume-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  background: var(--aurora-1);
+  cursor: pointer;
+  box-shadow: 0 0 6px rgba(91,228,255,0.5);
+}
+.vc-volume-slider::-moz-range-thumb {
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  background: var(--aurora-1);
+  border: none; cursor: pointer;
+}
+
+/* Hidden file input — FIXED: pointer-events auto in a real hidden input */
+.hero-file-input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+  z-index: 10;
+}
+
+.hero-upload-prompt {
+  display: flex; flex-direction: column;
+  align-items: center; gap: 18px;
+  padding: 60px 40px;
+  text-align: center;
+  pointer-events: none;
+}
+
+.hero-upload-badge {
+  font-family: var(--mono);
+  font-size: 10px; letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--aurora-1);
+  opacity: 0.8;
+}
+
+.hero-upload-title {
+  font-family: var(--display);
+  font-size: 28px; font-weight: 700; font-style: italic;
+  color: var(--text-0);
+  line-height: 1.2;
+}
+
+.hero-upload-sub {
+  font-size: 13px; color: var(--text-2); font-family: var(--mono);
+}
+
+/* Remove button overlay */
+.hero-remove {
+  position: absolute; top: 18px; right: 18px;
+  z-index: 50;
+  background: rgba(248,113,113,0.15);
+  border: 1px solid rgba(248,113,113,0.3);
+  color: var(--err);
+  border-radius: 100px;
+  padding: 6px 14px;
+  font-size: 12px; font-family: var(--mono);
+  cursor: pointer; transition: all 0.2s;
+}
+.hero-remove:hover { background: rgba(248,113,113,0.3); }
+
+.hero-filename-overlay {
+  position: absolute; bottom: 18px; left: 18px;
+  z-index: 50;
+  background: rgba(0,0,0,0.6);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(16px);
+  border-radius: 100px;
+  padding: 6px 16px;
+  font-family: var(--mono); font-size: 11px; color: var(--aurora-3);
+  transition: bottom 0.3s;
+}
+/* When overlay is active, push filename above it */
+.hero-video-frame.has-overlay .hero-filename-overlay {
+  /* hidden — controls bar at top shows the context */
+  display: none;
+}
+
+/* ── Tabs — Glass Pills ── */
+.tabs {
+  display: flex; gap: 6px;
+  margin-bottom: 32px;
+  padding: 5px;
+  background: var(--glass-0);
+  border: 1px solid var(--glass-border);
+  border-radius: 100px;
+  width: fit-content;
+  backdrop-filter: blur(16px);
+}
+
+.tab {
+  font-family: var(--sans); font-size: 13px; font-weight: 500;
+  padding: 8px 20px;
+  cursor: pointer; border: none;
+  background: transparent;
+  color: var(--text-2);
+  border-radius: 100px;
+  transition: all 0.2s;
+  letter-spacing: 0.2px;
+  white-space: nowrap;
+}
+
+.tab:hover { color: var(--text-1); background: var(--glass-1); }
+.tab.active {
+  color: var(--text-0);
+  background: var(--glass-2);
+  border: 1px solid var(--glass-border-bright);
+}
+
+/* ── Glass Cards ── */
+.card {
+  background: var(--glass-1);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--r-lg);
+  padding: 24px;
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.card:hover {
+  border-color: var(--glass-border-bright);
+}
+
+.card-title {
+  font-size: 10px; font-weight: 600; letter-spacing: 2.5px;
+  text-transform: uppercase; color: var(--text-2);
+  margin-bottom: 16px; font-family: var(--mono);
+}
+
+/* ── Small Drop Zone (reference video) ── */
+.drop-zone {
+  display: block;
+  border: 2px dashed rgba(255,255,255,0.1);
+  border-radius: var(--r-md);
+  padding: 28px 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+  overflow: hidden;
+  background: var(--glass-0);
+}
+
+.drop-zone:hover, .drop-zone.drag-over {
+  border-color: rgba(91,228,255,0.4);
+  background: rgba(91,228,255,0.04);
+}
+
+.drop-zone.has-file {
+  border-color: rgba(52,211,153,0.4);
+  background: rgba(52,211,153,0.04);
+}
+
+.drop-zone-input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+  z-index: 5;
+}
+
+.drop-label { font-size: 13px; color: var(--text-1); margin-bottom: 4px; }
+.drop-sub { font-size: 11px; color: var(--text-3); font-family: var(--mono); }
+.drop-filename {
+  font-family: var(--mono); font-size: 11px;
+  color: var(--aurora-3); margin-top: 8px;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+
+.drop-remove {
+  position: absolute; top: 8px; right: 10px; z-index: 10;
+  background: rgba(248,113,113,0.15); border: none;
+  color: var(--err); font-size: 16px; cursor: pointer;
+  border-radius: 6px; padding: 2px 7px; line-height: 1;
+  transition: background 0.15s;
+}
+.drop-remove:hover { background: rgba(248,113,113,0.3); }
+
+/* ── Process Chips ── */
+.chips-row {
+  display: flex; flex-wrap: wrap; gap: 8px;
+  margin-bottom: 24px;
+}
+
+.chip {
+  display: flex; align-items: center; gap: 7px;
+  font-family: var(--mono); font-size: 11px;
+  padding: 6px 14px; border-radius: 100px;
+  background: var(--glass-1);
+  border: 1px solid var(--glass-border);
+  color: var(--text-2);
+  transition: all 0.3s;
+  white-space: nowrap;
+  position: relative;
+  overflow: hidden;
+}
+
+.chip.active {
+  background: rgba(91,228,255,0.08);
+  border-color: rgba(91,228,255,0.35);
+  color: var(--aurora-1);
+}
+
+.chip.done {
+  background: rgba(52,211,153,0.08);
+  border-color: rgba(52,211,153,0.3);
+  color: var(--aurora-3);
+}
+
+.chip.failed {
+  background: rgba(248,113,113,0.08);
+  border-color: rgba(248,113,113,0.3);
+  color: var(--err);
+}
+
+.chip-marker {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--text-3);
+  flex-shrink: 0; transition: all 0.3s;
+}
+.chip.active .chip-marker {
+  background: var(--aurora-1);
+  box-shadow: 0 0 8px var(--aurora-1);
+  animation: chipPulse 1.2s ease-in-out infinite;
+}
+.chip.done .chip-marker {
+  background: var(--aurora-3);
+  box-shadow: 0 0 6px var(--aurora-3);
+}
+.chip.failed .chip-marker { background: var(--err); }
+
+@keyframes chipPulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.6; transform: scale(0.8); }
+}
+
+/* ── Streaming Status Panel ── */
+.stream-panel {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  z-index: 50;
+  background: rgba(5,8,16,0.92);
+  border-top: 1px solid var(--glass-border);
+  backdrop-filter: blur(24px);
+  padding: 12px 28px;
+  max-height: 160px;
+  overflow: hidden;
+}
+
+.stream-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.stream-label {
+  font-family: var(--mono); font-size: 10px; letter-spacing: 2px;
+  text-transform: uppercase; color: var(--aurora-1);
+  display: flex; align-items: center; gap: 6px;
+}
+
+.stream-toggle {
+  font-family: var(--mono); font-size: 10px; color: var(--text-3);
+  background: none; border: none; cursor: pointer; padding: 2px 8px;
+  transition: color 0.2s;
+}
+.stream-toggle:hover { color: var(--text-1); }
+
+.stream-log {
+  height: 100px;
+  overflow-y: auto;
+  font-family: var(--mono);
+  font-size: 11px;
+  line-height: 1.8;
+  scroll-behavior: smooth;
+}
+
+.stream-line {
+  color: var(--text-2);
+  display: flex; gap: 10px;
+  padding: 0 2px;
+  transition: color 0.3s;
+}
+.stream-line.new { color: var(--text-1); }
+.stream-line.error { color: var(--err); }
+.stream-line.success { color: var(--aurora-3); }
+.stream-line.pulse { color: var(--aurora-1); animation: pulse 1.5s ease-in-out infinite; }
+
+.stream-arrow { color: var(--text-3); }
+
+/* ── Progress bar ── */
+.progress-track {
+  height: 2px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 1px; overflow: hidden;
+  margin: 12px 0;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--aurora-2), var(--aurora-1));
+  border-radius: 1px;
+  transition: width 0.6s ease;
+  box-shadow: 0 0 10px rgba(91,228,255,0.5);
+}
+
+/* ── Carousel Results ── */
+.carousel-wrap {
+  position: relative;
+  margin-top: 0;
+}
+
+.carousel-track {
+  overflow: hidden;
+  border-radius: var(--r-xl);
+}
+
+.carousel-slide {
+  display: none;
+  animation: slideIn 0.4s ease both;
+}
+.carousel-slide.active { display: block; }
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(20px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+.carousel-content {
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  padding: 0;
+  min-height: 70px;
+}
+
+.carousel-nav {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-top: 12px;
+}
+
+.carousel-dots {
+  display: flex; gap: 8px; align-items: center;
+}
+
+.carousel-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--text-3);
+  cursor: pointer; transition: all 0.2s;
+}
+.carousel-dot.active {
+  background: var(--aurora-1);
+  width: 20px; border-radius: 3px;
+  box-shadow: 0 0 8px rgba(91,228,255,0.5);
+}
+
+.carousel-btn {
+  display: flex; align-items: center; justify-content: center;
+  width: 38px; height: 38px; border-radius: 50%;
+  background: var(--glass-1);
+  border: 1px solid var(--glass-border);
+  cursor: pointer; transition: all 0.2s;
+  color: var(--text-1);
+}
+.carousel-btn:hover:not(:disabled) {
+  background: var(--glass-2);
+  border-color: var(--glass-border-bright);
+}
+.carousel-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+.carousel-section-title {
+  font-family: var(--display);
+  font-size: 18px; font-style: italic;
+  font-weight: 700;
+  margin-bottom: 10px;
+  background: linear-gradient(135deg, var(--text-0), var(--aurora-1));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.carousel-section-body {
+  font-size: 11px; line-height: 1.85;
+  color: var(--text-1);
+  white-space: pre-wrap;
+  font-family: var(--mono);
+  max-height: 120px;
+  overflow-y: auto;
+}
+
+.carousel-label {
+  font-family: var(--mono); font-size: 9px; letter-spacing: 2.5px;
+  text-transform: uppercase; color: var(--text-3);
+  margin-bottom: 8px;
+}
+
+/* ── Button ── */
+.btn {
+  font-family: var(--sans); font-size: 14px; font-weight: 600;
+  letter-spacing: 0.3px;
+  padding: 13px 28px;
+  border-radius: 100px;
+  border: none; cursor: pointer;
+  transition: all 0.2s;
+  display: inline-flex; align-items: center; gap: 8px;
+  position: relative; overflow: hidden;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--aurora-2), var(--aurora-1));
+  color: var(--bg-deep);
+  font-weight: 700;
+  box-shadow: 0 4px 24px rgba(91,228,255,0.25);
+}
+
+.btn-primary::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: rgba(255,255,255,0);
+  transition: background 0.2s;
+}
+.btn-primary:hover:not(:disabled)::before { background: rgba(255,255,255,0.12); }
+.btn-primary:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 8px 32px rgba(91,228,255,0.35); }
+.btn-primary:disabled { opacity: 0.35; cursor: not-allowed; transform: none; }
+
+.btn-ghost {
+  background: var(--glass-1);
+  border: 1px solid var(--glass-border);
+  color: var(--text-1);
+  backdrop-filter: blur(16px);
+}
+.btn-ghost:hover { border-color: var(--glass-border-bright); color: var(--text-0); }
+
+.btn-sm { padding: 8px 18px; font-size: 12px; }
+
+/* ── Session list ── */
+.session-row {
+  display: flex; align-items: center; gap: 14px;
+  padding: 13px 14px;
+  border-bottom: 1px solid var(--glass-border);
+  cursor: pointer;
+  border-radius: var(--r-sm);
+  margin: 0 -4px;
+  transition: background 0.15s;
+}
+.session-row:hover { background: var(--glass-1); }
+.session-row:last-child { border-bottom: none; }
+
+.session-status-pill {
+  font-family: var(--mono); font-size: 9px;
+  padding: 3px 10px; border-radius: 100px;
+  letter-spacing: 0.5px; white-space: nowrap;
+}
+
+.pill-done    { background: rgba(52,211,153,0.12); color: var(--ok); border: 1px solid rgba(52,211,153,0.25); }
+.pill-running { background: rgba(91,228,255,0.1); color: var(--aurora-1); border: 1px solid rgba(91,228,255,0.25); }
+.pill-failed  { background: rgba(248,113,113,0.1); color: var(--err); border: 1px solid rgba(248,113,113,0.25); }
+.pill-pending { background: var(--glass-1); color: var(--text-2); border: 1px solid var(--glass-border); }
+
+/* ── Modal ── */
+.modal-backdrop {
+  position: fixed; inset: 0;
+  background: rgba(5,8,16,0.8);
+  backdrop-filter: blur(12px);
+  z-index: 200;
+  display: flex; align-items: center; justify-content: center;
+}
+
+.modal {
+  background: rgba(12,18,32,0.95);
+  border: 1px solid var(--glass-border-bright);
+  border-radius: var(--r-xl);
+  padding: 36px;
+  width: 440px; max-width: 95vw;
+  box-shadow: 0 32px 80px rgba(0,0,0,0.7);
+  backdrop-filter: blur(40px);
+}
+
+.modal-title {
+  font-family: var(--display); font-size: 20px; font-weight: 700; font-style: italic;
+  margin-bottom: 28px; color: var(--text-0);
+}
+
+/* ── Fields ── */
+.field { margin-bottom: 18px; }
+.field label {
+  display: block; font-family: var(--mono); font-size: 10px;
+  color: var(--text-3); letter-spacing: 1.5px; text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.field input {
+  width: 100%;
+  background: var(--glass-0);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--r-sm);
+  padding: 11px 16px;
+  font-family: var(--mono); font-size: 13px; color: var(--text-0);
+  outline: none; transition: border-color 0.2s;
+}
+.field input:focus { border-color: var(--aurora-1); box-shadow: 0 0 0 3px rgba(91,228,255,0.08); }
+
+/* ── Toggle ── */
+.toggle-row {
+  display: flex; align-items: center; gap: 14px;
+  padding: 16px 0;
+}
+
+.toggle-label { font-size: 13px; font-weight: 600; color: var(--text-0); }
+.toggle-sub   { font-size: 11px; color: var(--text-2); font-family: var(--mono); margin-top: 2px; }
+
+.toggle-switch {
+  position: relative; width: 46px; height: 26px; flex-shrink: 0;
+}
+.toggle-switch input { opacity: 0; width: 0; height: 0; }
+
+.toggle-track {
+  position: absolute; inset: 0;
+  background: var(--glass-1);
+  border: 1px solid var(--glass-border);
+  border-radius: 13px; cursor: pointer;
+  transition: all 0.25s;
+}
+.toggle-track::after {
+  content: '';
+  position: absolute; top: 3px; left: 3px;
+  width: 18px; height: 18px;
+  background: var(--text-3); border-radius: 50%;
+  transition: all 0.25s;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+}
+.toggle-switch input:checked + .toggle-track {
+  background: rgba(91,228,255,0.15);
+  border-color: rgba(91,228,255,0.5);
+}
+.toggle-switch input:checked + .toggle-track::after {
+  transform: translateX(20px);
+  background: var(--aurora-1);
+  box-shadow: 0 0 8px rgba(91,228,255,0.5);
+}
+
+/* ── Prompt block ── */
+.prompt-block {
+  background: rgba(91,228,255,0.04);
+  border: 1px solid rgba(91,228,255,0.15);
+  border-radius: var(--r-md);
+  padding: 20px;
+  font-family: var(--mono); font-size: 12px;
+  line-height: 1.9; color: var(--text-0);
+  white-space: pre-wrap; position: relative;
+}
+
+.copy-btn {
+  position: absolute; top: 12px; right: 12px;
+  background: var(--glass-1);
+  border: 1px solid var(--glass-border);
+  color: var(--text-2); font-size: 10px;
+  font-family: var(--mono); padding: 4px 10px;
+  border-radius: 6px; cursor: pointer; transition: all 0.15s;
+}
+.copy-btn:hover { border-color: var(--glass-border-bright); color: var(--text-1); }
+
+/* ── Result badge ── */
+.result-badge {
+  background: rgba(52,211,153,0.1);
+  border: 1px solid rgba(52,211,153,0.3);
+  color: var(--aurora-3);
+  font-family: var(--mono); font-size: 10px;
+  padding: 4px 12px; border-radius: 100px;
+}
+
+/* ── Info callout ── */
+.callout {
+  display: flex; gap: 14px; align-items: flex-start;
+  background: rgba(251,191,36,0.04);
+  border: 1px solid rgba(251,191,36,0.18);
+  border-radius: var(--r-md);
+  padding: 18px 20px;
+  margin-bottom: 18px;
+}
+
+/* ── Cols ── */
+.cols-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+.cols-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 18px; }
+@media (max-width: 720px) { .cols-2, .cols-3 { grid-template-columns: 1fr; } }
+
+/* ── Misc ── */
+.section-gap { margin-top: 28px; }
+.flex-end     { display: flex; justify-content: flex-end; gap: 10px; }
+.flex-between { display: flex; justify-content: space-between; align-items: center; }
+.text-dim     { color: var(--text-2); font-size: 12px; font-family: var(--mono); }
+.mt-4 { margin-top: 4px; }
+.mt-8 { margin-top: 8px; }
+.mt-16 { margin-top: 16px; }
+.mt-24 { margin-top: 24px; }
+
+.tag {
+  display: inline-block;
+  background: var(--glass-1);
+  border: 1px solid var(--glass-border);
+  color: var(--text-2);
+  font-family: var(--mono); font-size: 9px;
+  padding: 2px 8px; border-radius: 4px; letter-spacing: 1px; text-transform: uppercase;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
+
+/* Animations */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.fade-up { animation: fadeUp 0.4s ease both; }
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.4; }
+}
+.pulse { animation: pulse 1.8s ease-in-out infinite; }
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+.spin { display: inline-block; animation: spin 1s linear infinite; }
+
+/* Video container */
+.video-container {
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  background: #000;
+  border: 1px solid var(--glass-border);
+  margin-bottom: 20px;
+}
+.video-container video {
+  width: 100%; display: block;
+  max-height: 380px; object-fit: contain;
+}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const { useState, useEffect, useRef, useCallback } = React;
+
+// ── API base ──
+const API = window.location.port === '5500' ? 'http://localhost:7860' : '';
+
+// ── Utilities ──────────────────────────────────────────────────────────────
+function fmt_time(ts) {
+  const d = new Date(ts * 1000);
+  return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+}
+
+function CopyButton({ text }) {
+  const [copied, setCopied] = useState(false);
+  const copy = () => {
+    navigator.clipboard.writeText(text);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1500);
+  };
+  return (
+    <button className="copy-btn" onClick={copy}>
+      {copied ? '✓ copied' : 'copy'}
+    </button>
+  );
+}
+
+// ── Animated SVG Icons ─────────────────────────────────────────────────────
+function SkateIcon({ size = 32 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 48 48" fill="none">
+      <defs>
+        <linearGradient id="skGrad" x1="0" y1="0" x2="48" y2="48" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stopColor="#5be4ff">
+            <animate attributeName="stopColor" values="#5be4ff;#a78bfa;#5be4ff" dur="4s" repeatCount="indefinite"/>
+          </stop>
+          <stop offset="100%" stopColor="#a78bfa">
+            <animate attributeName="stopColor" values="#a78bfa;#5be4ff;#a78bfa" dur="4s" repeatCount="indefinite"/>
+          </stop>
+        </linearGradient>
+      </defs>
+      {/* Boot */}
+      <path d="M10 30 L10 16 Q10 12 14 12 L26 12 Q30 12 30 16 L30 22 L36 22 Q40 22 40 26 L40 30" stroke="url(#skGrad)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+      {/* Blade */}
+      <path d="M8 34 L42 34" stroke="url(#skGrad)" strokeWidth="2" strokeLinecap="round"/>
+      <path d="M12 34 L12 30 L36 30 L36 34" stroke="url(#skGrad)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+      {/* Sparkle */}
+      <circle cx="38" cy="14" r="2" fill="#5be4ff" opacity="0.8">
+        <animate attributeName="opacity" values="0.8;0.2;0.8" dur="2s" repeatCount="indefinite"/>
+      </circle>
+      <circle cx="43" cy="10" r="1.2" fill="#a78bfa" opacity="0.6">
+        <animate attributeName="opacity" values="0.6;0.1;0.6" dur="2.5s" repeatCount="indefinite"/>
+      </circle>
+    </svg>
+  );
+}
+
+function UploadIcon({ size = 48 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 64 64" fill="none">
+      <defs>
+        <linearGradient id="upGrad" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stopColor="#5be4ff" stopOpacity="0.8"/>
+          <stop offset="100%" stopColor="#a78bfa" stopOpacity="0.8"/>
+        </linearGradient>
+      </defs>
+      {/* Cloud */}
+      <path d="M20 44 Q12 44 12 36 Q12 30 18 28 Q16 18 26 16 Q32 14 36 20 Q40 16 46 18 Q52 20 52 28 Q58 30 56 36 Q54 44 46 44" stroke="url(#upGrad)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+      {/* Arrow up */}
+      <path d="M32 52 L32 32" stroke="url(#upGrad)" strokeWidth="2.5" strokeLinecap="round">
+        <animateTransform attributeName="transform" type="translate" values="0,3;0,-3;0,3" dur="2s" repeatCount="indefinite"/>
+      </path>
+      <path d="M25 38 L32 31 L39 38" stroke="url(#upGrad)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+        <animateTransform attributeName="transform" type="translate" values="0,3;0,-3;0,3" dur="2s" repeatCount="indefinite"/>
+      </path>
+    </svg>
+  );
+}
+
+function CheckIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 20 20" fill="none">
+      <circle cx="10" cy="10" r="9" stroke="#34d399" strokeWidth="1.5"/>
+      <path d="M6 10 L9 13 L14 7" stroke="#34d399" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+  );
+}
+
+function ArrowLeftIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+      <path d="M15 18L9 12L15 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+  );
+}
+
+function ArrowRightIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+      <path d="M9 18L15 12L9 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+  );
+}
+
+// ── Format seconds as mm:ss ────────────────────────────────────────────────
+function fmtDur(s) {
+  if (!isFinite(s)) return '0:00';
+  const m = Math.floor(s / 60);
+  const sec = Math.floor(s % 60);
+  return `${m}:${sec.toString().padStart(2,'0')}`;
+}
+
+// ── Play/Pause/Mute/Volume SVG icons ──────────────────────────────────────
+function PlayIcon()  { return <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>; }
+function PauseIcon() { return <svg viewBox="0 0 24 24" fill="currentColor"><rect x="5" y="3" width="4" height="18"/><rect x="15" y="3" width="4" height="18"/></svg>; }
+function MuteIcon()  { return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M11 5L6 9H2v6h4l5 4V5z"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>; }
+function VolumeIcon(){ return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M15.54 8.46a5 5 0 010 7.07"/><path d="M19.07 4.93a10 10 0 010 14.14"/></svg>; }
+
+// ── Hero Video Zone ─────────────────────────────────────────────────────────
+function HeroVideoZone({ file, onFile, hasOverlay }) {
+  const [drag, setDrag] = useState(false);
+  const [playing, setPlaying] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [muted, setMuted] = useState(false);
+  const [volume, setVolume] = useState(1);
+
+  const inputRef = useRef();
+  const videoRef = useRef();
+  // Stable object URL — only recreated when file identity changes
+  const objUrlRef  = useRef(null);
+  const prevFileRef = useRef(null);
+
+  if (file !== prevFileRef.current) {
+    if (objUrlRef.current) URL.revokeObjectURL(objUrlRef.current);
+    objUrlRef.current = file ? URL.createObjectURL(file) : null;
+    prevFileRef.current = file;
+  }
+
+  useEffect(() => {
+    return () => { if (objUrlRef.current) URL.revokeObjectURL(objUrlRef.current); };
+  }, []);
+
+  // Sync playing state when video loads
+  const onLoadedMetadata = () => {
+    if (videoRef.current) {
+      setDuration(videoRef.current.duration);
+      videoRef.current.play().catch(()=>{});
+      setPlaying(true);
+    }
+  };
+
+  const onTimeUpdate = () => {
+    if (!videoRef.current) return;
+    const cur = videoRef.current.currentTime;
+    const dur = videoRef.current.duration || 1;
+    setCurrentTime(cur);
+    setProgress((cur / dur) * 100);
+  };
+
+  const togglePlay = (e) => {
+    e.stopPropagation();
+    const v = videoRef.current;
+    if (!v) return;
+    if (v.paused) { v.play(); setPlaying(true); }
+    else          { v.pause(); setPlaying(false); }
+  };
+
+  const toggleMute = (e) => {
+    e.stopPropagation();
+    const v = videoRef.current;
+    if (!v) return;
+    v.muted = !v.muted;
+    setMuted(v.muted);
+  };
+
+  const onVolumeChange = (e) => {
+    e.stopPropagation();
+    const val = parseFloat(e.target.value);
+    setVolume(val);
+    if (videoRef.current) {
+      videoRef.current.volume = val;
+      videoRef.current.muted = val === 0;
+      setMuted(val === 0);
+    }
+  };
+
+  const onSeek = (e) => {
+    e.stopPropagation();
+    const rect = e.currentTarget.getBoundingClientRect();
+    const pct  = (e.clientX - rect.left) / rect.width;
+    if (videoRef.current && isFinite(videoRef.current.duration)) {
+      videoRef.current.currentTime = pct * videoRef.current.duration;
+    }
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault(); setDrag(false);
+    const f = e.dataTransfer.files[0];
+    if (f && f.type.startsWith('video/')) onFile(f);
+  };
+
+  const handleChange = (e) => {
+    const f = e.target.files[0];
+    if (f) onFile(f);
+    e.target.value = '';
+  };
+
+  const handleFrameClick = () => {
+    if (!file) inputRef.current?.click();
+  };
+
+  return (
+    <div
+      className={`hero-video-frame ${drag ? 'drag-over' : ''} ${file ? 'has-file' : ''} ${hasOverlay ? 'has-overlay' : ''}`}
+      onDragOver={e => { e.preventDefault(); setDrag(true); }}
+      onDragLeave={() => setDrag(false)}
+      onDrop={handleDrop}
+      onClick={handleFrameClick}
+    >
+      <input
+        ref={inputRef}
+        type="file"
+        accept="video/*,video/mp4,video/quicktime,video/avi,video/mov"
+        style={{ display: 'none' }}
+        onChange={handleChange}
+      />
+
+      {file ? (
+        <>
+          <video
+            ref={videoRef}
+            src={objUrlRef.current}
+            loop
+            playsInline
+            style={{ width: '100%', maxHeight: 520, objectFit: 'contain', display: 'block' }}
+            onLoadedMetadata={onLoadedMetadata}
+            onTimeUpdate={onTimeUpdate}
+            onPlay={() => setPlaying(true)}
+            onPause={() => setPlaying(false)}
+            onClick={e => e.stopPropagation()}
+          />
+
+          {/* ── Custom video controls — always on top ── */}
+          <div className="hero-video-controls" onClick={e => e.stopPropagation()}>
+            {/* Play/Pause */}
+            <button className="vc-btn" onClick={togglePlay} title={playing ? 'Pause' : 'Play'}>
+              {playing ? <PauseIcon /> : <PlayIcon />}
+            </button>
+
+            {/* Seek bar */}
+            <div className="vc-progress" onClick={onSeek} title="Seek">
+              <div className="vc-progress-fill" style={{ width: `${progress}%` }} />
+            </div>
+
+            {/* Time */}
+            <span className="vc-time">{fmtDur(currentTime)} / {fmtDur(duration)}</span>
+
+            {/* Volume */}
+            <div className="vc-volume-wrap">
+              <button className="vc-btn" onClick={toggleMute} title={muted ? 'Unmute' : 'Mute'}>
+                {muted || volume === 0 ? <MuteIcon /> : <VolumeIcon />}
+              </button>
+              <input
+                type="range"
+                className="vc-volume-slider"
+                min="0" max="1" step="0.05"
+                value={muted ? 0 : volume}
+                onChange={onVolumeChange}
+                onClick={e => e.stopPropagation()}
+                title="Volume"
+              />
+            </div>
+          </div>
+
+          <button
+            className="hero-remove"
+            onClick={e => { e.stopPropagation(); onFile(null); }}
+          >
+            ✕ Remove
+          </button>
+          <div className="hero-filename-overlay">{file.name}</div>
+        </>
+      ) : (
+        <div className="hero-upload-prompt">
+          <UploadIcon size={52} />
+          <div className="hero-upload-badge">Failed Jump Analysis</div>
+          <div className="hero-upload-title">Drop your jump video here</div>
+          <div className="hero-upload-sub">MP4 · MOV · AVI · Click or drag to upload</div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ── Small Reference Drop Zone ────────────────────────────────────────────
+// FIXED: same approach — ref-based click, no label wrapping
+function DropZone({ label, sublabel, file, onFile, optional = false }) {
+  const [drag, setDrag] = useState(false);
+  const inputRef = useRef();
+
+  const handleDrop = (e) => {
+    e.preventDefault(); setDrag(false);
+    const f = e.dataTransfer.files[0];
+    if (f) onFile(f);
+  };
+
+  const handleChange = (e) => {
+    const f = e.target.files[0];
+    if (f) onFile(f);
+    e.target.value = '';
+  };
+
+  return (
+    <div
+      className={`drop-zone ${optional ? 'optional' : ''} ${drag ? 'drag-over' : ''} ${file ? 'has-file' : ''}`}
+      onClick={() => inputRef.current?.click()}
+      onDragOver={e => { e.preventDefault(); setDrag(true); }}
+      onDragLeave={() => setDrag(false)}
+      onDrop={handleDrop}
+    >
+      {file && (
+        <button className="drop-remove" onClick={e => { e.preventDefault(); e.stopPropagation(); onFile(null); }}>×</button>
+      )}
+      {/* SVG icon */}
+      {!file ? (
+        <svg width="28" height="28" viewBox="0 0 32 32" fill="none" style={{marginBottom:8}}>
+          <path d="M6 26 L6 20 Q6 18 8 18 L24 18 Q26 18 26 20 L26 26" stroke="rgba(91,228,255,0.5)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+          <path d="M16 14 L16 4" stroke="rgba(91,228,255,0.5)" strokeWidth="1.5" strokeLinecap="round">
+            <animateTransform attributeName="transform" type="translate" values="0,2;0,-2;0,2" dur="2s" repeatCount="indefinite"/>
+          </path>
+          <path d="M12 8 L16 4 L20 8" stroke="rgba(91,228,255,0.5)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <animateTransform attributeName="transform" type="translate" values="0,2;0,-2;0,2" dur="2s" repeatCount="indefinite"/>
+          </path>
+        </svg>
+      ) : (
+        <svg width="24" height="24" viewBox="0 0 32 32" fill="none" style={{marginBottom:8}}>
+          <circle cx="16" cy="16" r="12" stroke="#34d399" strokeWidth="1.5"/>
+          <path d="M10 16 L14 20 L22 12" stroke="#34d399" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+      )}
+      <div className="drop-label">{file ? 'Reference ready' : label}</div>
+      <div className="drop-sub">{file ? '' : sublabel}</div>
+      {file && <div className="drop-filename">{file.name}</div>}
+      <input
+        ref={inputRef}
+        type="file"
+        accept="video/*,video/mp4,video/quicktime,video/avi"
+        style={{ display: 'none' }}
+        onChange={handleChange}
+      />
+    </div>
+  );
+}
+
+// ── Process Chips ───────────────────────────────────────────────────────────
+const STEPS = [
+  { key: 'upload',    label: 'Upload' },
+  { key: 'analyze',   label: 'Analyze' },
+  { key: 'extract',   label: 'Extract' },
+  { key: 'translate', label: 'Translate' },
+  { key: 'generate',  label: 'Generate' },
+  { key: 'poll',      label: 'Wait' },
+  { key: 'done',      label: 'Done' },
+];
+
+function ProcessChips({ currentStep, status }) {
+  const idx = STEPS.findIndex(s => s.key === currentStep);
+  return (
+    <div className="chips-row">
+      {STEPS.map((s, i) => {
+        const isDone   = i < idx || status === 'done';
+        const isActive = i === idx && status !== 'done';
+        const isFailed = status === 'failed' && i === idx;
+        let cls = '';
+        if (isFailed) cls = 'failed';
+        else if (isDone) cls = 'done';
+        else if (isActive) cls = 'active';
+        return (
+          <div key={s.key} className={`chip ${cls}`}>
+            <span className="chip-marker" />
+            {isDone && !isFailed && <CheckIcon />}
+            {s.label}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+// ── Session Row ─────────────────────────────────────────────────────────────
+function SessionRow({ job, onClick }) {
+  const pillClass = {
+    done: 'pill-done', running: 'pill-running',
+    failed: 'pill-failed', pending: 'pill-pending',
+  }[job.status] || 'pill-pending';
+
+  return (
+    <div className="session-row" onClick={onClick}>
+      <div style={{ flex: 1, minWidth: 0 }}>
+        <div style={{ fontSize: 13, fontWeight: 600, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+          {job.video_name}
+        </div>
+        {job.reference_name && (
+          <div className="text-dim mt-4">ref: {job.reference_name}</div>
+        )}
+      </div>
+      <span className={`session-status-pill ${pillClass}`}>{job.status}</span>
+      <div className="text-dim">{fmt_time(job.created_at)}</div>
+    </div>
+  );
+}
+
+// ── Results Carousel ────────────────────────────────────────────────────────
+function ResultsCarousel({ result, sessionId }) {
+  const [slide, setSlide] = useState(0);
+
+  const slides = [];
+
+  if (result.output_video) {
+    slides.push({
+      label: 'Corrected Video',
+      title: 'Your Corrected Jump',
+      content: (
+        <div>
+          <div className="video-container">
+            <video controls autoPlay loop muted src={`${API}/jobs/${sessionId}/video`} />
+          </div>
+          <a href={`${API}/jobs/${sessionId}/video`} download={`${result.output_name}.mp4`} style={{textDecoration:'none'}}>
+            <button className="btn btn-ghost btn-sm">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 4v12m0 0l-4-4m4 4l4-4M4 20h16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+              Download Video
+            </button>
+          </a>
+        </div>
+      )
+    });
+  }
+
+  if (result.analysis) {
+    // Split analysis into sections
+    const parts = result.analysis.split(/\n\n+/);
+    const chunkSize = 3;
+    for (let i = 0; i < parts.length; i += chunkSize) {
+      const chunk = parts.slice(i, i + chunkSize).join('\n\n');
+      slides.push({
+        label: 'Analysis',
+        title: i === 0 ? 'Jump Analysis' : 'Continued Analysis',
+        content: (
+          <div className="carousel-section-body">{chunk}</div>
+        )
+      });
+    }
+  }
+
+  if (result.prompt) {
+    slides.push({
+      label: 'Visualization',
+      title: 'Recommended Visualization',
+      content: (
+        <div className="prompt-block">
+          <CopyButton text={result.prompt} />
+          {result.prompt}
+        </div>
+      )
+    });
+  }
+
+  if (slides.length === 0) return null;
+
+  return (
+    <div className="carousel-wrap fade-up">
+      <div className="flex-between" style={{ marginBottom: 16 }}>
+        <div className="result-badge">✓ Session Complete</div>
+        <div className="text-dim">{slide + 1} / {slides.length}</div>
+      </div>
+
+      <div className="carousel-track">
+        <div className="carousel-slide active">
+          <div className="carousel-content">
+            <div className="carousel-label">{slides[slide].label}</div>
+            <div className="carousel-section-title">{slides[slide].title}</div>
+            {slides[slide].content}
+          </div>
+        </div>
+      </div>
+
+      <div className="carousel-nav">
+        <button
+          className="carousel-btn"
+          onClick={() => setSlide(s => Math.max(0, s - 1))}
+          disabled={slide === 0}
+        >
+          <ArrowLeftIcon />
+        </button>
+
+        <div className="carousel-dots">
+          {slides.map((_, i) => (
+            <div
+              key={i}
+              className={`carousel-dot ${i === slide ? 'active' : ''}`}
+              onClick={() => setSlide(i)}
+            />
+          ))}
+        </div>
+
+        <button
+          className="carousel-btn"
+          onClick={() => setSlide(s => Math.min(slides.length - 1, s + 1))}
+          disabled={slide === slides.length - 1}
+        >
+          <ArrowRightIcon />
+        </button>
+      </div>
+    </div>
+  );
+}
+
+// ── Streaming Status Panel ─────────────────────────────────────────────────
+function StreamPanel({ logs, isRunning, jobStatus }) {
+  const logRef = useRef();
+  const [collapsed, setCollapsed] = useState(true);
+
+  useEffect(() => {
+    if (logRef.current) logRef.current.scrollTop = logRef.current.scrollHeight;
+  }, [logs]);
+
+  if (!logs || logs.length === 0) return null;
+
+  return (
+    <div className="stream-panel">
+      <div className="stream-header">
+        <span className="stream-label">
+          <span style={{
+            width: 6, height: 6, borderRadius: '50%', display:'inline-block',
+            background: isRunning ? 'var(--aurora-1)' : jobStatus === 'done' ? 'var(--ok)' : 'var(--err)',
+            boxShadow: isRunning ? '0 0 8px var(--aurora-1)' : 'none',
+            animation: isRunning ? 'pulse 1.5s ease-in-out infinite' : 'none',
+          }} />
+          Processing Log
+        </span>
+        <button className="stream-toggle" onClick={() => setCollapsed(c => !c)}>
+          {collapsed ? '▲ expand' : '▼ collapse'}
+        </button>
+      </div>
+      {!collapsed && (
+        <div className="stream-log" ref={logRef}>
+          {logs.map((l, i) => (
+            <div
+              key={i}
+              className={`stream-line ${i === logs.length - 1 ? 'new' : ''} ${l.status === 'failed' ? 'error' : ''} ${l.status === 'done' ? 'success' : ''}`}
+            >
+              <span className="stream-arrow">›</span>
+              <span>{l.message}</span>
+            </div>
+          ))}
+          {isRunning && (
+            <div className="stream-line pulse">
+              <span className="stream-arrow">›</span>
+              <span>Processing…</span>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ── Config Modal ────────────────────────────────────────────────────────────
+function ConfigModal({ onClose }) {
+  const [ip,   setIp]   = useState('192.168.1.125');
+  const [user, setUser] = useState('suetchun');
+  const [saving, setSaving] = useState(false);
+
+  const save = async () => {
+    setSaving(true);
+    const fd = new FormData();
+    fd.append('spark_ip', ip);
+    fd.append('spark_user', user);
+    await fetch(`${API}/config`, { method: 'POST', body: fd });
+    setSaving(false);
+    onClose();
+  };
+
+  return (
+    <div className="modal-backdrop" onClick={onClose}>
+      <div className="modal" onClick={e => e.stopPropagation()}>
+        <div className="modal-title">Spark Configuration</div>
+        <div className="field">
+          <label>Spark IP Address</label>
+          <input value={ip} onChange={e => setIp(e.target.value)} placeholder="192.168.1.125" />
+        </div>
+        <div className="field">
+          <label>Spark Username</label>
+          <input value={user} onChange={e => setUser(e.target.value)} placeholder="suetchun" />
+        </div>
+        <div className="flex-end mt-16">
+          <button className="btn btn-ghost btn-sm" onClick={onClose}>Cancel</button>
+          <button className="btn btn-primary btn-sm" onClick={save} disabled={saving}>
+            {saving ? 'Saving…' : 'Save'}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── Main App ────────────────────────────────────────────────────────────────
+function App() {
+  const [tab,        setTab]        = useState('new');
+  const [video,      setVideo]      = useState(null);
+  const [reference,  setReference]  = useState(null);
+  const [sessions,   setSessions]   = useState([]);
+  const [activeSession, setActiveSession] = useState(null);
+  const [health,     setHealth]     = useState(null);
+  const [genVideo,   setGenVideo]   = useState(true);
+  const [submitting, setSubmitting] = useState(false);
+  const [showConfig, setShowConfig] = useState(false);
+
+  // ── Poll health ──
+  useEffect(() => {
+    const check = async () => {
+      try {
+        const r = await fetch(`${API}/health`);
+        setHealth(await r.json());
+      } catch { setHealth(null); }
+    };
+    check();
+    const t = setInterval(check, 30000);
+    return () => clearInterval(t);
+  }, []);
+
+  // ── Poll sessions list ──
+  useEffect(() => {
+    const fetchSessions = async () => {
+      try {
+        const r = await fetch(`${API}/jobs`);
+        setSessions(await r.json());
+      } catch {}
+    };
+    fetchSessions();
+    const t = setInterval(fetchSessions, 3000);
+    return () => clearInterval(t);
+  }, []);
+
+  // ── SSE stream for active session ──
+  useEffect(() => {
+    if (!activeSession) return;
+    if (activeSession.status === 'done' || activeSession.status === 'failed') return;
+
+    const es = new EventSource(`${API}/jobs/${activeSession.id}/stream`);
+    es.onmessage = (e) => {
+      const data = JSON.parse(e.data);
+      setActiveSession(j => j ? {
+        ...j,
+        status:   data.status,
+        progress: data.progress,
+        latest_log: data.message,
+        logs: [...(j.logs || []), data],
+      } : j);
+      if (data.status === 'done' || data.status === 'failed') {
+        es.close();
+        fetch(`${API}/jobs/${activeSession.id}`)
+          .then(r => r.json())
+          .then(j => setActiveSession(j));
+      }
+    };
+    return () => es.close();
+  }, [activeSession?.id, activeSession?.status]);
+
+  // ── Submit session ──
+  const submit = async () => {
+    if (!video) return;
+    setSubmitting(true);
+    const fd = new FormData();
+    fd.append('video', video);
+    if (reference) fd.append('reference', reference);
+    fd.append('generate_video', genVideo ? 'true' : 'false');
+    try {
+      const r = await fetch(`${API}/jobs`, { method: 'POST', body: fd });
+      const session = await r.json();
+      setActiveSession({ ...session, logs: [] });
+      setTab('session');
+    } catch (e) {
+      alert('Failed to submit session: ' + e.message);
+    }
+    setSubmitting(false);
+  };
+
+  const sparkOk    = health?.spark?.reason2;
+  const statusText = health == null ? 'checking…' : sparkOk ? 'spark ready' : 'spark offline';
+  const isRunning  = activeSession?.status === 'running';
+
+  return (
+    <div className="app">
+      {/* ── Header ── */}
+      <header className="header">
+        <div className="logo">
+          <div className="logo-svg-wrap">
+            <SkateIcon size={40} />
+          </div>
+          <div className="logo-text-group">
+            <span className="logo-name">Dream to Win</span>
+            <span className="logo-sub">Dream It. Analyze It. Win It.</span>
+          </div>
+        </div>
+        <button className="status-pill" onClick={() => setShowConfig(true)}>
+          <span className={`status-dot ${health == null ? '' : sparkOk ? 'ok' : 'error'}`} />
+          {statusText}
+          &nbsp;·&nbsp;
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M12 15a3 3 0 100-6 3 3 0 000 6z" stroke="currentColor" strokeWidth="1.5"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z" stroke="currentColor" strokeWidth="1.5"/></svg>
+        </button>
+      </header>
+
+      {/* ── Hero Video — always visible, carousel overlaid on top ── */}
+      <div className="hero-section">
+        <HeroVideoZone file={video} onFile={setVideo} hasOverlay={!!(activeSession?.status === 'done' && activeSession?.result)} />
+
+        {/* Glass pane carousel overlaid on the video when results are ready */}
+        {activeSession?.status === 'done' && activeSession?.result && (
+          <div className="hero-overlay-carousel">
+            <ResultsCarousel result={activeSession.result} sessionId={activeSession.id} />
+          </div>
+        )}
+      </div>
+
+      {/* ── Tabs ── */}
+      <div className="tabs">
+        <button className={`tab ${tab === 'new' ? 'active' : ''}`} onClick={() => setTab('new')}>New Session</button>
+        <button className={`tab ${tab === 'session' ? 'active' : ''}`} onClick={() => setTab('session')} disabled={!activeSession}>
+          {activeSession ? `Session ${activeSession.id}` : 'Active Session'}
+        </button>
+        <button className={`tab ${tab === 'sessions' ? 'active' : ''}`} onClick={() => setTab('sessions')}>
+          History {sessions.length > 0 && <span className="tag" style={{marginLeft:6}}>{sessions.length}</span>}
+        </button>
+      </div>
+
+      {/* ── Tab: New Session ── */}
+      {tab === 'new' && (
+        <div className="fade-up">
+          <div className="cols-2" style={{ marginBottom: 20 }}>
+            <div>
+              <div className="card-title">Reference Video</div>
+              <DropZone
+                label="Drop correct jump reference"
+                sublabel="Same jump type · optional"
+                file={reference}
+                onFile={setReference}
+                optional
+              />
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+              {health && (
+                <div className="card">
+                  <div className="card-title">Spark Status</div>
+                  <div className="cols-3" style={{ gap: 12 }}>
+                    <div>
+                      <div className="text-dim">Gateway</div>
+                      <div style={{ marginTop: 4, fontWeight: 600, fontSize: 13 }}>
+                        {health.spark?.gateway
+                          ? <span style={{ color: 'var(--ok)' }}>✓ Online</span>
+                          : <span style={{ color: 'var(--err)' }}>✗ Offline</span>}
+                      </div>
+                    </div>
+                    <div>
+                      <div className="text-dim">Reason2</div>
+                      <div style={{ marginTop: 4, fontWeight: 600, fontSize: 13 }}>
+                        {health.spark?.reason2
+                          ? <span style={{ color: 'var(--ok)' }}>✓ Ready</span>
+                          : <span style={{ color: 'var(--err)' }}>✗ Not ready</span>}
+                      </div>
+                    </div>
+                    <div>
+                      <div className="text-dim">Model</div>
+                      <div style={{ marginTop: 4, fontSize: 11, fontFamily: 'var(--mono)', color: 'var(--text-2)' }}>
+                        {health.spark?.model?.split('/')[1] || '—'}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              <div className="card">
+                <div className="toggle-row">
+                  <label className="toggle-switch">
+                    <input type="checkbox" checked={genVideo} onChange={e => setGenVideo(e.target.checked)} />
+                    <span className="toggle-track" />
+                  </label>
+                  <div>
+                    <div className="toggle-label">Generate corrected video</div>
+                    <div className="toggle-sub">
+                      {genVideo
+                        ? 'Full pipeline — analysis + video (30-70 min)'
+                        : 'Analysis only — prompt without video (~5 min)'}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {!reference && (
+            <div className="callout">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" style={{flexShrink:0,marginTop:1}}>
+                <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z" stroke="#fbbf24" strokeWidth="1.5"/>
+                <path d="M12 8v4m0 4h.01" stroke="#fbbf24" strokeWidth="2" strokeLinecap="round"/>
+              </svg>
+              <div>
+                <div style={{ fontWeight: 600, color: 'var(--aurora-5)', marginBottom: 4, fontSize: 13 }}>Better results with a reference video</div>
+                <div className="text-dim" style={{ lineHeight: 1.7 }}>
+                  Without a reference, Predict2.5 generates generic jumping motion. A correct jump reference significantly improves output quality.
+                </div>
+              </div>
+            </div>
+          )}
+
+          <div className="flex-end" style={{ marginTop: 8 }}>
+            {!sparkOk && health !== null && (
+              <span className="text-dim" style={{ alignSelf: 'center', marginRight: 12 }}>
+                Spark offline — start containers on DGX Spark first
+              </span>
+            )}
+            <button
+              className="btn btn-primary"
+              disabled={!video || submitting || !sparkOk}
+              onClick={submit}
+            >
+              {submitting ? (
+                <><span className="spin">⟳</span> Submitting…</>
+              ) : genVideo ? (
+                <>
+                  <SkateIcon size={18} />
+                  Analyze &amp; Correct Jump
+                </>
+              ) : (
+                <>
+                  <SkateIcon size={18} />
+                  Analyze Jump
+                </>
+              )}
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* ── Tab: Active Session ── */}
+      {tab === 'session' && activeSession && (
+        <div className="fade-up">
+          <div className="flex-between" style={{ marginBottom: 24 }}>
+            <div>
+              <div className="text-dim" style={{ marginBottom: 4 }}>SESSION ID</div>
+              <div style={{ fontFamily: 'var(--mono)', fontSize: 20, fontWeight: 700 }}>
+                {activeSession.id}
+              </div>
+            </div>
+            <span className={`session-status-pill ${{
+              done:'pill-done', running:'pill-running', failed:'pill-failed', pending:'pill-pending'
+            }[activeSession.status]}`} style={{ fontSize: 12, padding: '7px 18px' }}>
+              {activeSession.status === 'running' && <span className="spin" style={{ marginRight: 6 }}>⟳</span>}
+              {activeSession.status}
+            </span>
+          </div>
+
+          <ProcessChips
+            currentStep={activeSession.logs?.slice(-1)[0]?.step || 'upload'}
+            status={activeSession.status}
+          />
+
+          <div className="progress-track">
+            <div className="progress-fill" style={{ width: `${activeSession.progress || 0}%` }} />
+          </div>
+
+          <div className="flex-between" style={{ marginBottom: 20 }}>
+            <span className="text-dim">{activeSession.video_name}</span>
+            <span className="text-dim">{activeSession.progress || 0}%</span>
+          </div>
+
+          {activeSession.status === 'failed' && (
+            <div className="card fade-up" style={{ borderColor: 'rgba(248,113,113,0.3)', background: 'rgba(248,113,113,0.05)' }}>
+              <div style={{ fontWeight: 700, color: 'var(--err)', marginBottom: 8 }}>✗ Session Failed</div>
+              <div className="text-dim">{activeSession.error}</div>
+            </div>
+          )}
+
+          {activeSession.status === 'done' && (
+            <div className="card fade-up" style={{ borderColor: 'rgba(52,211,153,0.25)', background: 'rgba(52,211,153,0.04)', textAlign: 'center', padding: '20px' }}>
+              <div style={{ color: 'var(--aurora-3)', fontWeight: 600, fontSize: 13 }}>
+                ✓ Analysis complete — scroll up to review results on the video
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* ── Tab: History ── */}
+      {tab === 'sessions' && (
+        <div className="fade-up">
+          <div className="card-title">Past Sessions</div>
+          {sessions.length === 0 ? (
+            <div className="text-dim" style={{ padding: '48px 0', textAlign: 'center' }}>
+              No sessions yet — submit a video to get started.
+            </div>
+          ) : sessions.map(session => (
+            <SessionRow
+              key={session.id}
+              job={session}
+              onClick={async () => {
+                const r = await fetch(`${API}/jobs/${session.id}`);
+                const full = await r.json();
+                setActiveSession(full);
+                setTab('session');
+              }}
+            />
+          ))}
+        </div>
+      )}
+
+      {/* ── Streaming status panel — collapsed by default ── */}
+      <StreamPanel
+        logs={activeSession?.logs}
+        isRunning={isRunning}
+        jobStatus={activeSession?.status}
+      />
+
+      {showConfig && <ConfigModal onClose={() => setShowConfig(false)} />}
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>
