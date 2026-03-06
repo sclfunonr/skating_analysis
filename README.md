@@ -3,12 +3,12 @@
 
 
 
-**Dream to Win** is an AI-powered sports analytics platform purpose-built for figure skaters and coaches. By combining multimodal video intelligence with a cinematic, glass-pane interface, it transforms raw jump footage into actionable coaching insight — and, when desired, a fully corrected reference video.
+**Dream to Win** is a Physics AI-powered sports analytics platform purpose-built for figure skaters and coaches. By combining multimodal video intelligence with a cinematic, glass-pane interface, it transforms raw jump footage into actionable coaching insight — and, when desired, a fully corrected reference video.
 
 **The difference between a bronze medal and a gold medal can be a single degree of arm angle at take-off. Dream to Win makes that degree visible.**
 
 
-Dream to Win reframes the coaching workflow around a single, powerful idea: upload your failed jump, and receive an expert AI analysis — plus, optionally, a generated video of what that same jump looks like when executed correctly.
+Dream to Win reframes the coaching workflow around a single, powerful idea: upload your failed jump, and receive an expert Physics AI analysis — plus, optionally, a generated video of what that same jump looks like when executed correctly.
 The platform is built on three integrated pillars:
 
 🎬
@@ -16,8 +16,8 @@ The platform is built on three integrated pillars:
 Multimodal AI analyzes every frame of the jump — from pre-take-off blade preparation through landing knee flex — producing a structured biomechanical breakdown.
 
 🧠
-**Reason2 Analysis Engine**
-Powered by Reason2 with Predict2.5 running on DGX Spark, the system reasons over the video to identify root-cause technique faults, not just surface symptoms.
+**Cosmos Reason2 Analysis and Cosmos Predict2.5 World Simulation for Physical AI**
+Powered by Cosmos Reason2 with Cosmos Predict2.5 running on DGX Spark, the system reasons over the video to identify root-cause technique faults, not just surface symptoms.
 
 ✨
 **Corrected Jump Generation**
