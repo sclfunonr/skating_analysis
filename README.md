@@ -1,7 +1,47 @@
-# Skating Pipeline
+# Dream To Win: 
+### Dream It. Analyze It. Win It.
 
-AI-powered figure skating jump analysis and correction.
-Repository: `https://github.com/sclfunonr/skating_analysis`
+
+
+**Dream to Win** is an AI-powered sports analytics platform purpose-built for figure skaters and coaches. By combining multimodal video intelligence with a cinematic, glass-pane interface, it transforms raw jump footage into actionable coaching insight — and, when desired, a fully corrected reference video.
+
+**The difference between a bronze medal and a gold medal can be a single degree of arm angle at take-off. Dream to Win makes that degree visible.**
+
+
+Dream to Win reframes the coaching workflow around a single, powerful idea: upload your failed jump, and receive an expert AI analysis — plus, optionally, a generated video of what that same jump looks like when executed correctly.
+The platform is built on three integrated pillars:
+
+🎬
+**Video Intelligence**
+Multimodal AI analyzes every frame of the jump — from pre-take-off blade preparation through landing knee flex — producing a structured biomechanical breakdown.
+
+🧠
+**Reason2 Analysis Engine**
+Powered by Reason2 with Predict2.5 running on DGX Spark, the system reasons over the video to identify root-cause technique faults, not just surface symptoms.
+
+✨
+**Corrected Jump Generation**
+Using the analysis as a prompt, the AI renders a corrected version of the same jump — giving coaches and athletes an immediately usable visual reference for ideal form.
+
+## HOW IT WORKS
+**Step 1** — Upload Your Jump
+
+The athlete or coach drops a video of the jump directly onto the full-width hero player. The interface accepts MP4, MOV, and AVI formats. An optional reference video of the same jump executed correctly can be added to fine-tune and improve generation quality — though the system may perform well without one.
+
+**Step 2** — Configure Your Session
+
+Choose between two modes: Analysis Only (approximately 5 minutes, delivers the written analysis and a recommended visualization prompt) or Full Pipeline (30–70 minutes, delivers both the analysis and a fully generated corrected jump video). A real-time Spark status panel confirms GPU availability before submission.
+
+**Step 3** — Monitor in Real Time
+
+A streaming process log at the foot of the interface displays live status updates from the pipeline — upload, analysis, prompt extraction, visual translation, generation, and polling — each represented as a status chip with an animated indicator. The log is collapsed by default to keep the interface clean.
+
+**Step 4** — Review Results on the Video
+
+When the session completes, a frosted glass overlays the video that is being analyzed. The analysis is paginated, allowing coaches and athletes to scrub through the source footage while reading the AI commentary side-by-side. A dedicated Recommended Visualization slide presents the final visual recommendation. 
+
+**Side-by-side review: watch the exact moment of the fault while reading the AI's precise description of why it happened. No more switching windows.**
+
 
 ## Quickstart
 
@@ -31,8 +71,8 @@ This project has:
 - SSH + SCP access to the Spark host user (key-based auth recommended)
 
 Default Spark config in code:
-- `spark_ip`: `192.168.1.125` - replace it with your LLMs server IP
-- `spark_user`: `suetchun` - replace it with your LLMs server user name.
+- `spark_ip`: `<replace it with your LLMs server IP>` 
+- `spark_user`: `<replace it with your LLMs server user name>`
 
 You can change these in the UI settings or via `POST /config`.
 
